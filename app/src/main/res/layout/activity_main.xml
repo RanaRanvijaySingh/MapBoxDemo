@@ -13,4 +13,19 @@
         android:layout_height="match_parent"
         app:access_token="@string/mapbox_access_token"
         app:style_url="@string/style_mapbox_streets"/>
+
+    <Button
+        android:id="@+id/bShowPolyline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClickShowPolyLineButton"
+        android:text="Toggle polyline"/>
+
+    <Button
+        android:id="@+id/bAddNewPoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/bShowPolyline"
+        android:onClick="onClickAdNewPointButton"
+        android:text="Add new point"/>
 </RelativeLayout>
