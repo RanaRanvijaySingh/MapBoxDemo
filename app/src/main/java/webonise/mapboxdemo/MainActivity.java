@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mapbox.mapboxsdk.annotations.Polyline;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private PolylineOptions polylineOptions;
     private double latIncrementConstants = 0;
     private double longIncrementConstants = 0;
+    private Polyline mPolyline;
 
     {
         latLngList.add(new LatLng(18.515600, 73.781900));
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             drawPolyline();
         } else {
             isShowEnable = true;
-            mapboxMap.removePolyline(polylineOptions.getPolyline());
+            mapboxMap.removePolyline(mPolyline);
         }
     }
 
@@ -132,7 +134,11 @@ public class MainActivity extends AppCompatActivity {
                 .add(points)
                 .color(Color.parseColor("#3bb2d0"))
                 .width(2);
-        mapboxMap.addPolyline(polylineOptions);
+        if (mPolyline != null){
+            mPolyline.remove();
+            mPolyline = null;
+        }
+        mPolyline = mapboxMap.addPolyline(polylineOptions);
     }
 
     public void onClickAdNewPointButton(View view) {
