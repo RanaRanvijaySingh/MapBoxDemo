@@ -137,13 +137,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickShowPolyLineButton(View view) {
-        if (isShowEnable) {
+        /*if (isShowEnable) {
             isShowEnable = false;
             drawPolyline();
         } else {
             isShowEnable = true;
             mapboxMap.removePolyline(mPolyline);
-        }
+        }*/
+        Toast.makeText(this,"Click on 'ARCGIS' button. This functionality is present on master branch.",Toast.LENGTH_SHORT).show();
     }
 
     private void drawPolyline() {
@@ -160,30 +161,80 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickAdNewPointButton(View view) {
-        latIncrementConstants = latIncrementConstants + 0.0005;
+        /*latIncrementConstants = latIncrementConstants + 0.0005;
         longIncrementConstants = longIncrementConstants - 0.0005;
         latLngList.add(new LatLng(18.515600 + latIncrementConstants,
                 73.781914 + longIncrementConstants));
-        drawPolyline();
+        drawPolyline();*/
+        Toast.makeText(this,"Click on 'ARCGIS' button. This functionality is present on master branch.",Toast.LENGTH_SHORT).show();
     }
 
     public void onClickAddPolygon(View view) {
-        final LatLng[] points = latLngPolygon.toArray(new LatLng[latLngPolygon.size()]);
+        /*final LatLng[] points = latLngPolygon.toArray(new LatLng[latLngPolygon.size()]);
         PolylineOptions polylineOptions = new PolylineOptions()
                 .add(points)
                 .width(5)
                 .color(Color.parseColor("#3cc2d0"));
-        mPolyline = mapboxMap.addPolyline(polylineOptions);
+        mPolyline = mapboxMap.addPolyline(polylineOptions);*/
+        Toast.makeText(this,"Click on 'ARCGIS' button. This functionality is present on master branch.",Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Function is called on click of ArcGis button
+     * @param view View
+     */
     public void onClickArcGis(View view) {
+        //Initialize geometry factory object to get Geometry object.
         geometryFactory = new GeometryFactory();
+        //Create geometry object using your own lat lang points
+        //TODO : latLngPolygon - Used in this example is to show a bigger picture. Replace it
+        //TODO : with your requirement.
         Geometry geometryOriginal = getGeometryForPolygon(latLngPolygon);
+        //Draw polygon on map
         createPolygon(geometryOriginal);
-        Geometry geometryBuffered = geometryOriginal.buffer(0.0001);
+        /**
+         * Create geometry object with given buffer distance
+         * Now buffer distance will vary on your requirement
+         * Range could be anything
+         * Hit and try
+         */
+        Geometry geometryBuffered = geometryOriginal.buffer(1);
+        //Draw buffer polygon
         createPolygon(geometryBuffered);
     }
 
+    /**
+     * Function to get Geometry object (Class from vividsolutions)
+     * from given list of latlng
+     * @param bounds List
+     * @return Geometry (Class from vividsolutions)
+     */
+    public Geometry getGeometryForPolygon(List<LatLng> bounds) {
+        List<Coordinate> coordinates = getCoordinatesList(bounds);
+        if (!coordinates.isEmpty()) {
+            return geometryFactory.createPolygon(getLinearRing(coordinates), null);
+        }
+        return null;
+    }
+
+    /**
+     * Function to create a list of coordinates from a list of lat lng
+     * @param listLatLng list<LatLng>
+     * @return List<Coordinate> (Class from vividsolutions)
+     */
+    private List<Coordinate> getCoordinatesList(List<LatLng> listLatLng) {
+        List<Coordinate> coordinates = new ArrayList<>();
+        for (int i = 0; i < listLatLng.size(); i++) {
+            coordinates.add(new Coordinate(
+                    listLatLng.get(i).getLatitude(),listLatLng.get(i).getLongitude()));
+        }
+        return coordinates;
+    }
+
+    /**
+     * Function to create a polygon on the map
+     * @param geometry Geometry Class from vividsolutions
+     */
     private void createPolygon(Geometry geometry) {
         LatLng [] points = getPoints(geometry.getCoordinates());
         mapboxMap.addPolyline(new PolylineOptions()
@@ -192,6 +243,12 @@ public class MainActivity extends AppCompatActivity {
                 .color(Color.parseColor("#FF0000")));
     }
 
+    /**
+     * Function to convert array of Coordinates (Class from vividsolutions)
+     * to Android LatLng array
+     * @param coordinates Coordinates (Class from vividsolutions)
+     * @return LatLng[]
+     */
     @NonNull
     private LatLng[] getPoints(Coordinate[] coordinates) {
         List<LatLng> listPoints = new ArrayList<>();
@@ -201,35 +258,34 @@ public class MainActivity extends AppCompatActivity {
         return listPoints.toArray(new LatLng[listPoints.size()]);
     }
 
-    public Geometry getGeometryForPolygon(List<LatLng> bounds) {
-        List<Coordinate> coordinates = getCoordinatesList(bounds);
-        if (!coordinates.isEmpty()) {
-            return geometryFactory.createPolygon(getLinearRing(coordinates), null);
-        }
-        return null;
-    }
-
+    /**
+     * Function to create LinearRing (Class from vividsolutions) from a list of
+     * Coordinate (Class from vividsolutions)
+     * @param coordinates List
+     * @return  LinearRing
+     */
     @NonNull
     private LinearRing getLinearRing(List<Coordinate> coordinates) {
         return new LinearRing(getPoints(coordinates), geometryFactory);
     }
 
+    /**
+     * Function to get points of CoordinateArraySequence (Class from vividsolutions)
+     * @param coordinates List (Class from vividsolutions)
+     * @return CoordinateArraySequence (Class from vividsolutions)
+     */
     @NonNull
     private CoordinateArraySequence getPoints(List<Coordinate> coordinates) {
         return new CoordinateArraySequence(getCoordinates(coordinates));
     }
 
+    /**
+     * Function to get coordinates array from a list of coordinates
+     * @param coordinates List<Coordinate> (Class from vividsolutions)
+     * @return Coordinate [] (Class from vividsolutions)
+     */
     @NonNull
     private Coordinate[] getCoordinates(List<Coordinate> coordinates) {
         return coordinates.toArray(new Coordinate[coordinates.size()]);
-    }
-
-    private List<Coordinate> getCoordinatesList(List<LatLng> listLatLng) {
-        List<Coordinate> coordinates = new ArrayList<>();
-        for (int i = 0; i < listLatLng.size(); i++) {
-            coordinates.add(new Coordinate(
-                    listLatLng.get(i).getLatitude(),listLatLng.get(i).getLongitude()));
-        }
-        return coordinates;
     }
 }
