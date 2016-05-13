@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private Polyline mPolyline;
     private GeometryFactory geometryFactory;
 
+    //These coordinates are of BHAVDAN, PUNE, MAHARASHTRA, INDIA
     {
         latLngList.add(new LatLng(18.515600, 73.781900));
         latLngList.add(new LatLng(18.515700, 73.781901));
@@ -82,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Function to initialize mapbox
+     *
+     * @param mapboxMap MapboxMap
+     */
     public void initMapBox(MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
         Toast.makeText(MainActivity.this, "Map box object initialized", Toast.LENGTH_SHORT).show();
@@ -136,15 +142,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     * * ++++++++++++++++++++++++++ TOGGLE POLYLINE EXAMPLE++++++++++++++++++++++++++++++++++++++
+     * * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     */
+
+    /**
+     * Function to toggle polyline drawn
+     *
+     * @param view View
+     */
     public void onClickShowPolyLineButton(View view) {
-        /*if (isShowEnable) {
+        if (isShowEnable) {
             isShowEnable = false;
             drawPolyline();
         } else {
             isShowEnable = true;
             mapboxMap.removePolyline(mPolyline);
-        }*/
-        Toast.makeText(this,"Click on 'ARCGIS' button. This functionality is present on master branch.",Toast.LENGTH_SHORT).show();
+        }
+        Toast.makeText(this, "Zoom to area of BHAVDAN, PUNE, MAHARASHTRA, INDIA",
+                Toast.LENGTH_SHORT).show();
     }
 
     private void drawPolyline() {
@@ -160,30 +178,41 @@ public class MainActivity extends AppCompatActivity {
         mPolyline = mapboxMap.addPolyline(polylineOptions);
     }
 
-    public void onClickAdNewPointButton(View view) {
-        /*latIncrementConstants = latIncrementConstants + 0.0005;
-        longIncrementConstants = longIncrementConstants - 0.0005;
-        latLngList.add(new LatLng(18.515600 + latIncrementConstants,
-                73.781914 + longIncrementConstants));
-        drawPolyline();*/
-        Toast.makeText(this,"Click on 'ARCGIS' button. This functionality is present on master branch.",Toast.LENGTH_SHORT).show();
-    }
-
-    public void onClickAddPolygon(View view) {
-        /*final LatLng[] points = latLngPolygon.toArray(new LatLng[latLngPolygon.size()]);
-        PolylineOptions polylineOptions = new PolylineOptions()
-                .add(points)
-                .width(5)
-                .color(Color.parseColor("#3cc2d0"));
-        mPolyline = mapboxMap.addPolyline(polylineOptions);*/
-        Toast.makeText(this,"Click on 'ARCGIS' button. This functionality is present on master branch.",Toast.LENGTH_SHORT).show();
-    }
+    /**
+     * * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     * * ++++++++++++++++++++++++++ ADD NEW POINT EXAMPLE ++++++++++++++++++++++++++++++++++++++++
+     * * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     */
 
     /**
-     * Function is called on click of ArcGis button
+     * Function is called on click of add new point button
+     * This function adds a new point and links the previous
+     * line with new created point.
+     *
      * @param view View
      */
-    public void onClickArcGis(View view) {
+    public void onClickAdNewPointButton(View view) {
+        latIncrementConstants = latIncrementConstants + 0.0005;
+        longIncrementConstants = longIncrementConstants - 0.0005;
+        //Location - Bhavdan, Pune, Maharashtra, India
+        latLngList.add(new LatLng(18.515600 + latIncrementConstants,
+                73.781914 + longIncrementConstants));
+        drawPolyline();
+        Toast.makeText(this, "Zoom to area of BHAVDAN, PUNE, MAHARASHTRA, INDIA",
+                Toast.LENGTH_SHORT).show();    }
+
+    /**
+     * * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     * * ++++++++++++++++++++++++++ BUFFERED AREA CODE +++++++++++++++++++++++++++++++++++++++++++
+     * * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     */
+
+    /**
+     * Function is called on click of Buffer Example button
+     *
+     * @param view View
+     */
+    public void onClickBufferExample(View view) {
         //Initialize geometry factory object to get Geometry object.
         geometryFactory = new GeometryFactory();
         //Create geometry object using your own lat lang points
@@ -206,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Function to get Geometry object (Class from vividsolutions)
      * from given list of latlng
+     *
      * @param bounds List
      * @return Geometry (Class from vividsolutions)
      */
@@ -219,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Function to create a list of coordinates from a list of lat lng
+     *
      * @param listLatLng list<LatLng>
      * @return List<Coordinate> (Class from vividsolutions)
      */
@@ -226,17 +257,18 @@ public class MainActivity extends AppCompatActivity {
         List<Coordinate> coordinates = new ArrayList<>();
         for (int i = 0; i < listLatLng.size(); i++) {
             coordinates.add(new Coordinate(
-                    listLatLng.get(i).getLatitude(),listLatLng.get(i).getLongitude()));
+                    listLatLng.get(i).getLatitude(), listLatLng.get(i).getLongitude()));
         }
         return coordinates;
     }
 
     /**
      * Function to create a polygon on the map
+     *
      * @param geometry Geometry Class from vividsolutions
      */
     private void createPolygon(Geometry geometry) {
-        LatLng [] points = getPoints(geometry.getCoordinates());
+        LatLng[] points = getPoints(geometry.getCoordinates());
         mapboxMap.addPolyline(new PolylineOptions()
                 .add(points)
                 .width(4)
@@ -246,14 +278,15 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Function to convert array of Coordinates (Class from vividsolutions)
      * to Android LatLng array
+     *
      * @param coordinates Coordinates (Class from vividsolutions)
      * @return LatLng[]
      */
     @NonNull
     private LatLng[] getPoints(Coordinate[] coordinates) {
         List<LatLng> listPoints = new ArrayList<>();
-        for (Coordinate coordinate: coordinates) {
-            listPoints.add(new LatLng(coordinate.x,coordinate.y));
+        for (Coordinate coordinate : coordinates) {
+            listPoints.add(new LatLng(coordinate.x, coordinate.y));
         }
         return listPoints.toArray(new LatLng[listPoints.size()]);
     }
@@ -261,8 +294,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Function to create LinearRing (Class from vividsolutions) from a list of
      * Coordinate (Class from vividsolutions)
+     *
      * @param coordinates List
-     * @return  LinearRing
+     * @return LinearRing
      */
     @NonNull
     private LinearRing getLinearRing(List<Coordinate> coordinates) {
@@ -271,6 +305,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Function to get points of CoordinateArraySequence (Class from vividsolutions)
+     *
      * @param coordinates List (Class from vividsolutions)
      * @return CoordinateArraySequence (Class from vividsolutions)
      */
@@ -281,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Function to get coordinates array from a list of coordinates
+     *
      * @param coordinates List<Coordinate> (Class from vividsolutions)
      * @return Coordinate [] (Class from vividsolutions)
      */
