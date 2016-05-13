@@ -28,4 +28,19 @@
         android:layout_toRightOf="@id/bShowPolyline"
         android:onClick="onClickAdNewPointButton"
         android:text="Add new point"/>
+
+    <Button
+        android:id="@+id/bAddPolygon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/bAddNewPoint"
+        android:onClick="onClickAddPolygon"
+        android:text="Add polygon"/>
+
+    <Button
+        android:layout_below="@id/bShowPolyline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClickArcGis"
+        android:text="ArcGis map"/>
 </RelativeLayout>
