@@ -212,23 +212,34 @@ public class PolygonBuffer {
         List<LatLng> bufferedLatLngList = new ArrayList<>();
         List<LatLng> finalPointList = new ArrayList<>();
         List<Double> finalBearingList = new ArrayList<>();
-        for (int i = 0; i < lngs.size() - 1; i++) {
+        for (int i = 0; i < lngs.size(); i++) {
+            int nextPosition = i == lngs.size() - 1 ? 0 : i + 1;
             LatLng first = lngs.get(i);
-            LatLng second = lngs.get(i + 1);
+            LatLng second = lngs.get(nextPosition);
+
             double[] dnb = computeDistanceAndBearing(first.getLatitude(),
                     first.getLongitude(), second.getLatitude(), second.getLongitude());
+
             double[] deNB = computeDestinationAndBearing(first.getLatitude(),
-                    first.getLongitude(), dnb[1], dnb[0]);
+                    first.getLongitude(), dnb[2], -5);
+
             LatLng finalP = new LatLng(deNB[0], deNB[1]);
             finalPointList.add(finalP);
             finalBearingList.add(deNB[2]);
         }
-        for (int i = 0; i < finalPointList.size() - 1; i++) {
-            LatLng finalBufferPoint = computeIntersectionPoint(
-                    finalPointList.get(i), finalBearingList.get(i),
-                    finalPointList.get(i + 1), finalBearingList.get(i + 1));
-            bufferedLatLngList.add(finalBufferPoint);
+        for (int i = 0; i < finalPointList.size(); i++) {
+            int nextPosition = i == lngs.size() - 1 ? 0 : i + 1;
+            LatLng firstPoint = finalPointList.get(i);
+            LatLng nextPoint = finalPointList.get(nextPosition);
+            double firstBearing = finalBearingList.get(i);
+            double nextBearing = finalBearingList.get(nextPosition);
+            LatLng finalBufferPoint = computeIntersectionPoint(firstPoint, nextBearing,
+                    nextPoint, firstBearing);
+            LatLng finalPoint = new LatLng(finalBufferPoint.getLatitude() * -1, finalBufferPoint
+                    .getLongitude() * -1);
+            bufferedLatLngList.add(finalPoint);
         }
+        bufferedLatLngList.add(bufferedLatLngList.get(0));
         return bufferedLatLngList;
     }
 }

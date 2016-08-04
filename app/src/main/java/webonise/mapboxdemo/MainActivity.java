@@ -9,8 +9,6 @@ import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.Polyline;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -56,17 +54,18 @@ public class MainActivity extends AppCompatActivity {
         latLngList.add(new LatLng(18.517000, 73.781914));
     }
 
-    final List<LatLng> latLngPolygon = new ArrayList<>();
+    /* final List<LatLng> latLngPolygon = new ArrayList<>();
 
-    {
+   {
         latLngPolygon.add(new LatLng(18.522198905982776, 73.77668023109436));
         latLngPolygon.add(new LatLng(18.5222294252479, 73.77941608428954));
         latLngPolygon.add(new LatLng(18.520316874109714, 73.77942681312561));
         latLngPolygon.add(new LatLng(18.520296527706048, 73.7766695022583));
         latLngPolygon.add(new LatLng(18.522198905982776, 73.77668023109436));
 
-    }
-    /*final List<LatLng> latLngPolygon = new ArrayList<>();
+    }*/
+    final List<LatLng> latLngPolygon = new ArrayList<>();
+
     {
         latLngPolygon.add(new LatLng(28.6139, 77.2090));//delhi
         latLngPolygon.add(new LatLng(22.2587, 71.1924));//gujarat
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         latLngPolygon.add(new LatLng(12.9716, 77.5946));//banglore
         latLngPolygon.add(new LatLng(25.5941, 85.1376));//patna
         latLngPolygon.add(new LatLng(28.6139, 77.2090));//delhi
-    }*/
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,10 +139,10 @@ public class MainActivity extends AppCompatActivity {
             mapview.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(MapboxMap mapboxMap) {
-                    CameraPosition.Builder b = new CameraPosition.Builder();
+                    /*CameraPosition.Builder b = new CameraPosition.Builder();
                     b.target(latLngPolygon.get(0));
                     b.zoom(ZOOM_DEFAULT);
-                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(b.build()), 1000);
+                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(b.build()), 1000);*/
                     // Customize map with markers, polylines, etc.
                 }
             });
