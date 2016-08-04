@@ -17,11 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    packagingOptions {
-        exclude 'META-INF/LGPL2.1'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-    }
 }
 
 repositories {
@@ -39,6 +34,5 @@ dependencies {
     compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:4.0.0@aar'){
         transitive=true
     }
-    compile 'com.esri.arcgis.android:arcgis-android:10.2.8'
     compile 'com.vividsolutions:jts:1.13'
 }
