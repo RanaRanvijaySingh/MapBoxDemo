@@ -3,28 +3,26 @@ package webonise.mapboxdemo;
 import android.Manifest;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.Polyline;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final double ZOOM_DEFAULT = 18.0f;
     private MapboxMap mapboxMap;
     private MapView mapview;
     private boolean hasInternetPermission;
@@ -61,13 +59,22 @@ public class MainActivity extends AppCompatActivity {
     final List<LatLng> latLngPolygon = new ArrayList<>();
 
     {
+        latLngPolygon.add(new LatLng(18.522198905982776, 73.77668023109436));
+        latLngPolygon.add(new LatLng(18.5222294252479, 73.77941608428954));
+        latLngPolygon.add(new LatLng(18.520316874109714, 73.77942681312561));
+        latLngPolygon.add(new LatLng(18.520296527706048, 73.7766695022583));
+        latLngPolygon.add(new LatLng(18.522198905982776, 73.77668023109436));
+
+    }
+    /*final List<LatLng> latLngPolygon = new ArrayList<>();
+    {
         latLngPolygon.add(new LatLng(28.6139, 77.2090));//delhi
         latLngPolygon.add(new LatLng(22.2587, 71.1924));//gujarat
         latLngPolygon.add(new LatLng(18.5204, 73.8567));//pune
         latLngPolygon.add(new LatLng(12.9716, 77.5946));//banglore
         latLngPolygon.add(new LatLng(25.5941, 85.1376));//patna
         latLngPolygon.add(new LatLng(28.6139, 77.2090));//delhi
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +140,10 @@ public class MainActivity extends AppCompatActivity {
             mapview.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(MapboxMap mapboxMap) {
-
+                    CameraPosition.Builder b = new CameraPosition.Builder();
+                    b.target(latLngPolygon.get(0));
+                    b.zoom(ZOOM_DEFAULT);
+                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(b.build()), 1000);
                     // Customize map with markers, polylines, etc.
                 }
             });
@@ -199,7 +209,8 @@ public class MainActivity extends AppCompatActivity {
                 73.781914 + longIncrementConstants));
         drawPolyline();
         Toast.makeText(this, "Zoom to area of BHAVDAN, PUNE, MAHARASHTRA, INDIA",
-                Toast.LENGTH_SHORT).show();    }
+                Toast.LENGTH_SHORT).show();
+    }
 
     /**
      * * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -213,115 +224,24 @@ public class MainActivity extends AppCompatActivity {
      * @param view View
      */
     public void onClickBufferExample(View view) {
-        //Initialize geometry factory object to get Geometry object.
-        geometryFactory = new GeometryFactory();
-        //Create geometry object using your own lat lang points
-        //TODO : latLngPolygon - Used in this example is to show a bigger picture. Replace it
-        //TODO : with your requirement.
-        Geometry geometryOriginal = getGeometryForPolygon(latLngPolygon);
-        //Draw polygon on map
-        createPolygon(geometryOriginal);
-        /**
-         * Create geometry object with given buffer distance
-         * Now buffer distance will vary on your requirement
-         * Range could be anything
-         * Hit and try
-         */
-        Geometry geometryBuffered = geometryOriginal.buffer(1);
+        LatLng[] points = latLngPolygon.toArray(new LatLng[latLngPolygon.size()]);
+        createPolygon(points);
+        // Get buffered polygon points
+        List<LatLng> bufferedPolygonList = new PolygonBuffer().buffer(latLngPolygon);
         //Draw buffer polygon
-        createPolygon(geometryBuffered);
-    }
-
-    /**
-     * Function to get Geometry object (Class from vividsolutions)
-     * from given list of latlng
-     *
-     * @param bounds List
-     * @return Geometry (Class from vividsolutions)
-     */
-    public Geometry getGeometryForPolygon(List<LatLng> bounds) {
-        List<Coordinate> coordinates = getCoordinatesList(bounds);
-        if (!coordinates.isEmpty()) {
-            return geometryFactory.createPolygon(getLinearRing(coordinates), null);
-        }
-        return null;
-    }
-
-    /**
-     * Function to create a list of coordinates from a list of lat lng
-     *
-     * @param listLatLng list<LatLng>
-     * @return List<Coordinate> (Class from vividsolutions)
-     */
-    private List<Coordinate> getCoordinatesList(List<LatLng> listLatLng) {
-        List<Coordinate> coordinates = new ArrayList<>();
-        for (int i = 0; i < listLatLng.size(); i++) {
-            coordinates.add(new Coordinate(
-                    listLatLng.get(i).getLatitude(), listLatLng.get(i).getLongitude()));
-        }
-        return coordinates;
+        LatLng[] bufferedPoints = bufferedPolygonList.toArray(new LatLng[bufferedPolygonList.size()]);
+        createPolygon(bufferedPoints);
     }
 
     /**
      * Function to create a polygon on the map
      *
-     * @param geometry Geometry Class from vividsolutions
+     * @param points Geometry Class from vividsolutions
      */
-    private void createPolygon(Geometry geometry) {
-        LatLng[] points = getPoints(geometry.getCoordinates());
+    private void createPolygon(LatLng[] points) {
         mapboxMap.addPolyline(new PolylineOptions()
                 .add(points)
                 .width(4)
                 .color(Color.parseColor("#FF0000")));
-    }
-
-    /**
-     * Function to convert array of Coordinates (Class from vividsolutions)
-     * to Android LatLng array
-     *
-     * @param coordinates Coordinates (Class from vividsolutions)
-     * @return LatLng[]
-     */
-    @NonNull
-    private LatLng[] getPoints(Coordinate[] coordinates) {
-        List<LatLng> listPoints = new ArrayList<>();
-        for (Coordinate coordinate : coordinates) {
-            listPoints.add(new LatLng(coordinate.x, coordinate.y));
-        }
-        return listPoints.toArray(new LatLng[listPoints.size()]);
-    }
-
-    /**
-     * Function to create LinearRing (Class from vividsolutions) from a list of
-     * Coordinate (Class from vividsolutions)
-     *
-     * @param coordinates List
-     * @return LinearRing
-     */
-    @NonNull
-    private LinearRing getLinearRing(List<Coordinate> coordinates) {
-        return new LinearRing(getPoints(coordinates), geometryFactory);
-    }
-
-    /**
-     * Function to get points of CoordinateArraySequence (Class from vividsolutions)
-     *
-     * @param coordinates List (Class from vividsolutions)
-     * @return CoordinateArraySequence (Class from vividsolutions)
-     */
-    @NonNull
-    private CoordinateArraySequence getPoints(List<Coordinate> coordinates) {
-        return new CoordinateArraySequence(getCoordinates(coordinates));
-    }
-
-    /**
-     * Function to get coordinates array from a list of coordinates
-     *
-     * @param coordinates List<Coordinate> (Class from vividsolutions)
-     * @return Coordinate [] (Class from vividsolutions)
-     */
-    @NonNull
-    private Coordinate[] getCoordinates(List<Coordinate> coordinates) {
-        return coordinates.toArray(new Coordinate[coordinates.size()]);
     }
 }
