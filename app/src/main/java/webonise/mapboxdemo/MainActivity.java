@@ -56,16 +56,32 @@ public class MainActivity extends AppCompatActivity {
         latLngList.add(new LatLng(18.517000, 73.781914));
     }
 
-    final List<LatLng> latLngPolygon = new ArrayList<>();
+    //Square polygon
+   /*  final List<LatLng> latLngPolygon = new ArrayList<>();
 
-    {
+   {
         latLngPolygon.add(new LatLng(18.522198905982776, 73.77668023109436));
         latLngPolygon.add(new LatLng(18.5222294252479, 73.77941608428954));
         latLngPolygon.add(new LatLng(18.520316874109714, 73.77942681312561));
         latLngPolygon.add(new LatLng(18.520296527706048, 73.7766695022583));
         latLngPolygon.add(new LatLng(18.522198905982776, 73.77668023109436));
 
+    }*/
+
+    final List<LatLng> latLngPolygon = new ArrayList<>();
+
+    {
+        latLngPolygon.add(new LatLng(18.5222294252479, 73.77664268016815));
+        latLngPolygon.add(new LatLng(18.522987318585017, 73.77766728401184));
+        latLngPolygon.add(new LatLng(18.522977145542317, 73.77920687198639));
+        latLngPolygon.add(new LatLng(18.52205139612452, 73.77998471260071));
+        latLngPolygon.add(new LatLng(18.52091709192927, 73.77995252609253));
+        latLngPolygon.add(new LatLng(18.520316874109714, 73.77870798110962));
+        latLngPolygon.add(new LatLng(18.520454212271208, 73.77709329128265));
+        latLngPolygon.add(new LatLng(18.5222294252479, 73.77664268016815));
+
     }
+
   /*  final List<LatLng> latLngPolygon = new ArrayList<>();
 
     {

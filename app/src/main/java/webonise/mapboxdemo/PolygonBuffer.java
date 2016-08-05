@@ -219,7 +219,7 @@ public class PolygonBuffer {
             double[] distanceAndBearing = computeDistanceAndBearing(firstLocation.getLatitude(),
                     firstLocation.getLongitude(), secondLocation.getLatitude(), secondLocation.getLongitude());
             double[] destinationAndBearing = computeDestinationAndBearing(firstLocation.getLatitude(),
-                    firstLocation.getLongitude(), distanceAndBearing[2], -5);
+                    firstLocation.getLongitude(), distanceAndBearing[2], -25);
             LatLng finalLocation = new LatLng(destinationAndBearing[0], destinationAndBearing[1]);
             finalLocationList.add(finalLocation);
             finalBearingList.add(destinationAndBearing[2]);
