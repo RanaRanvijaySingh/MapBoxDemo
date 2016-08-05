@@ -210,33 +210,30 @@ public class PolygonBuffer {
 
     public List<LatLng> buffer(List<LatLng> lngs) {
         List<LatLng> bufferedLatLngList = new ArrayList<>();
-        List<LatLng> finalPointList = new ArrayList<>();
+        List<LatLng> finalLocationList = new ArrayList<>();
         List<Double> finalBearingList = new ArrayList<>();
         for (int i = 0; i < lngs.size(); i++) {
             int nextPosition = i == lngs.size() - 1 ? 0 : i + 1;
-            LatLng first = lngs.get(i);
-            LatLng second = lngs.get(nextPosition);
-
-            double[] dnb = computeDistanceAndBearing(first.getLatitude(),
-                    first.getLongitude(), second.getLatitude(), second.getLongitude());
-
-            double[] deNB = computeDestinationAndBearing(first.getLatitude(),
-                    first.getLongitude(), dnb[2], -5);
-
-            LatLng finalP = new LatLng(deNB[0], deNB[1]);
-            finalPointList.add(finalP);
-            finalBearingList.add(deNB[2]);
+            LatLng firstLocation = lngs.get(i);
+            LatLng secondLocation = lngs.get(nextPosition);
+            double[] distanceAndBearing = computeDistanceAndBearing(firstLocation.getLatitude(),
+                    firstLocation.getLongitude(), secondLocation.getLatitude(), secondLocation.getLongitude());
+            double[] destinationAndBearing = computeDestinationAndBearing(firstLocation.getLatitude(),
+                    firstLocation.getLongitude(), distanceAndBearing[2], -5);
+            LatLng finalLocation = new LatLng(destinationAndBearing[0], destinationAndBearing[1]);
+            finalLocationList.add(finalLocation);
+            finalBearingList.add(destinationAndBearing[2]);
         }
-        for (int i = 0; i < finalPointList.size(); i++) {
-            int nextPosition = i == lngs.size() - 1 ? 0 : i + 1;
-            LatLng firstPoint = finalPointList.get(i);
-            LatLng nextPoint = finalPointList.get(nextPosition);
+        for (int i = 0; i < finalLocationList.size(); i++) {
+            int nextPosition = i == finalLocationList.size() - 1 ? 0 : i + 1;
+            LatLng firstPoint = finalLocationList.get(i);
+            LatLng nextPoint = finalLocationList.get(nextPosition);
             double firstBearing = finalBearingList.get(i);
             double nextBearing = finalBearingList.get(nextPosition);
             LatLng finalBufferPoint = computeIntersectionPoint(firstPoint, nextBearing,
-                    nextPoint, firstBearing);
-            LatLng finalPoint = new LatLng(finalBufferPoint.getLatitude() * -1, finalBufferPoint
-                    .getLongitude() * -1);
+                    nextPoint, firstBearing + 180);
+            LatLng finalPoint = new LatLng(finalBufferPoint.getLatitude(),
+                    finalBufferPoint.getLongitude());
             bufferedLatLngList.add(finalPoint);
         }
         bufferedLatLngList.add(bufferedLatLngList.get(0));
