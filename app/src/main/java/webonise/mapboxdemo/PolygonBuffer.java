@@ -230,8 +230,8 @@ public class PolygonBuffer {
             LatLng nextPoint = finalLocationList.get(nextPosition);
             double firstBearing = finalBearingList.get(i);
             double nextBearing = finalBearingList.get(nextPosition);
-            LatLng finalBufferPoint = computeIntersectionPoint(firstPoint, nextBearing,
-                    nextPoint, firstBearing + 180);
+            LatLng finalBufferPoint = computeIntersectionPoint(firstPoint, nextBearing+180,
+                    nextPoint, firstBearing+180);
             LatLng finalPoint = new LatLng(finalBufferPoint.getLatitude(),
                     finalBufferPoint.getLongitude());
             bufferedLatLngList.add(finalPoint);

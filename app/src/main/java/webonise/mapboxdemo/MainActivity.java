@@ -20,6 +20,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import webonise.mapboxdemo.AreaBuffer.AreaBuffer;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final double ZOOM_DEFAULT = 18.0f;
@@ -244,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
         LatLng[] points = latLngPolygon.toArray(new LatLng[latLngPolygon.size()]);
         createPolygon(points, getResources().getColor(R.color.colorAccent));
         // Get buffered polygon points
-        List<LatLng> bufferedPolygonList = new PolygonBuffer().buffer(latLngPolygon);
+        List<LatLng> bufferedPolygonList = new AreaBuffer().buffer(latLngPolygon);
         //Draw buffer polygon
         LatLng[] bufferedPoints = bufferedPolygonList.toArray(new LatLng[bufferedPolygonList.size()]);
         createPolygon(bufferedPoints, getResources().getColor(R.color.mapbox_blue));
