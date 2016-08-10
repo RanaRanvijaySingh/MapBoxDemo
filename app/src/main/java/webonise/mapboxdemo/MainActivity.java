@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import webonise.mapboxdemo.AreaBuffer.AreaBuffer;
+import webonise.mapboxdemo.AreaBuffer.Point;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -246,10 +247,27 @@ public class MainActivity extends AppCompatActivity {
         LatLng[] points = latLngPolygon.toArray(new LatLng[latLngPolygon.size()]);
         createPolygon(points, getResources().getColor(R.color.colorAccent));
         // Get buffered polygon points
-        List<LatLng> bufferedPolygonList = new AreaBuffer().buffer(latLngPolygon);
-        //Draw buffer polygon
-        LatLng[] bufferedPoints = bufferedPolygonList.toArray(new LatLng[bufferedPolygonList.size()]);
-        createPolygon(bufferedPoints, getResources().getColor(R.color.mapbox_blue));
+        List<Point> pointList = new ArrayList<>();
+        for (int i = 0; i < latLngPolygon.size(); i++) {
+            Point point = new Point();
+            point.setX(latLngPolygon.get(i).getLatitude());
+            point.setY(latLngPolygon.get(i).getLongitude());
+            pointList.add(point);
+        }
+        try {
+            List<Point> bufferedPolygonList = new AreaBuffer().buffer(pointList);
+            List<LatLng> latLngList = new ArrayList<>();
+            for (int i = 0; i < bufferedPolygonList.size(); i++) {
+                LatLng latLng = new LatLng(bufferedPolygonList.get(i).getX(),
+                        bufferedPolygonList.get(i).getY());
+                latLngList.add(latLng);
+            }
+            //Draw buffer polygon
+            LatLng[] bufferedPoints = latLngList.toArray(new LatLng[latLngList.size()]);
+            createPolygon(bufferedPoints, getResources().getColor(R.color.mapbox_blue));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -21,6 +21,7 @@ public class LineEquation {
 
     public void setM(double m) {
         this.m = m;
+        setEquation();
     }
 
     public double getC() {
@@ -29,9 +30,14 @@ public class LineEquation {
 
     public void setC(double c) {
         this.c = c;
+        setEquation();
     }
 
     public String getEquation() {
         return "y = " + m + "x + " + c;
+    }
+
+    private void setEquation() {
+        this.equation = "y = " + m + "x + " + c;
     }
 }

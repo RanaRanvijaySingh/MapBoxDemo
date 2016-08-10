@@ -46,6 +46,24 @@ public class EquationHandlerTest {
     }
 
     @Test
+    public void testGetPerpendicularLineEquationForValidData2() {
+        EquationHandler equationHandler = new EquationHandler();
+        try {
+            LineEquation lineEquation = new LineEquation();
+            lineEquation.setC(5);
+            lineEquation.setM(0);
+            Point centerPoint = new Point();
+            centerPoint.setX(2.5);
+            centerPoint.setY(5);
+            LineEquation actualEquation = equationHandler.getPerpendicularLineEquation
+                    (lineEquation, centerPoint);
+            Assert.assertEquals("0.0y = -1.0x + 2.5", actualEquation.getEquation());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void testGetParallelLineEquationForValidData() {
         EquationHandler equationHandler = new EquationHandler();
         try {

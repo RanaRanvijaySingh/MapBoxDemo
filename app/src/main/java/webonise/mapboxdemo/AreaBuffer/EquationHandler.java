@@ -20,6 +20,7 @@ public class EquationHandler {
          */
         double m = (secondPoint.getY() - firstPoint.getY())
                 / (secondPoint.getX() - firstPoint.getX());
+        m = Double.isInfinite(m) ? 0 : m;
         lineEquation.setM(m);
         Log.d(TAG, "Slope of the line is : " + m);
         /**
@@ -48,6 +49,7 @@ public class EquationHandler {
          * given m1 is slop of given line and m2 will be slope of line perpendicular to it.
          */
         double m = -1 / givenLineEquation.getM();
+        m = Double.isInfinite(m) ? 0 : m;
         /**
          * Step 2: Get 'y' intercept using given crossing point in formula y = mx + c.
          * so c = y - mx
@@ -80,7 +82,7 @@ public class EquationHandler {
          */
         double c = crossingPoint.getY() - (m * crossingPoint.getX());
         lineEquation.setC(c);
-        lineEquation.setM(m);
+        lineEquation.setM(Double.isInfinite(m) ? 0 : m);
         return lineEquation;
     }
 

@@ -13,15 +13,53 @@ public class AreaBuffer {
      */
     public List<Point> buffer(List<Point> pointList) throws Exception {
         EquationHandler equationHandler = new EquationHandler();
-        List<LineEquation> lineEquationList = new ArrayList<>();
+        List<LineEquation> bufferedLineEquationList = new ArrayList<>();
         /**
-         * Step 1 : Get the list of line equation from given points.
+         * Find the buffered line Equation.
+         * If number of points in polygon are 5 ie. 0,1,2,3,4,0
+         * then run loop for points (0,1),(1,2),(2,3),(3,4),(4,0)
          */
         for (int i = 0; i < pointList.size() - 1; i++) {
-            lineEquationList.add(equationHandler
-                    .getLineEquation(pointList.get(i), pointList.get(i + 1)));
+            Point firstPoint = pointList.get(i);
+            Point secondPoint = pointList.get(i + 1);
+            /**
+             * Step 1: Get equation of line from two points
+             */
+            LineEquation actualLineEquation = equationHandler.getLineEquation(firstPoint, secondPoint);
+            /**
+             * Step 2: Get center point of two Points
+             */
+            Point centerPoint = new Point();
+            centerPoint = centerPoint.getCenterPoint(firstPoint, secondPoint);
+            /**
+             * Step 3: Get perpendicular line though center point.
+             */
+            LineEquation perpendicularLine = equationHandler.getPerpendicularLineEquation
+                    (actualLineEquation, centerPoint);
+            /**
+             * Step 4: Get point on the line a given distance
+             */
+            Point bufferPoint = equationHandler.getPointOnLineAtDistance(perpendicularLine,
+                    centerPoint, 0.0001);
+            /**
+             * Step 5: Get equation of line parallel to original line passing though buffer point
+             */
+            LineEquation bufferLineEquation = equationHandler.getParallelLineEquation
+                    (actualLineEquation, bufferPoint);
+            bufferedLineEquationList.add(bufferLineEquation);
         }
-
-        return null;
+        /**
+         * Once you have line equation of all the buffered line.
+         * Find the list of intersection points of all buffered lines.
+         */
+        List<Point> bufferedPoints = new ArrayList<>();
+        for (int i = 0; i < bufferedLineEquationList.size(); i++) {
+            int nextIndex = i >= bufferedLineEquationList.size() - 1 ? 0 : i + 1;
+            Point intersectionPoint = equationHandler.getIntersectionPoint
+                    (bufferedLineEquationList.get(i), bufferedLineEquationList.get(nextIndex));
+            bufferedPoints.add(intersectionPoint);
+        }
+        bufferedPoints.add(bufferedPoints.get(0));
+        return bufferedPoints;
     }
 }
