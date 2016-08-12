@@ -1,4 +1,4 @@
-package webonise.mapboxdemo.areabuffer;
+package com.rana.polygonbuffer.areabuffer;
 
 public class Point {
     private double x;

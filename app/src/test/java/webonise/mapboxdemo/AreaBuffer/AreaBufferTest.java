@@ -1,4 +1,4 @@
-package webonise.mapboxdemo.AreaBuffer;
+package webonise.mapboxdemo.areabuffer;
 
 import org.junit.Test;
 

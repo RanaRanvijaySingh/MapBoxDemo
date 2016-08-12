@@ -1,11 +1,27 @@
-package webonise.mapboxdemo.AreaBuffer;
+package webonise.mapboxdemo.areabuffer;
+
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class EquationHandlerTest {
+import java.util.ArrayList;
+import java.util.List;
 
+public class EquationHandlerTest {
+    final List<LatLng> pointList = new ArrayList<>();
+    {
+        pointList.add(new LatLng(18.5222294252479, 73.77664268016815));
+        pointList.add(new LatLng(18.522987318585017, 73.77766728401184));
+        pointList.add(new LatLng(18.522977145542317, 73.77920687198639));
+        pointList.add(new LatLng(18.52205139612452, 73.77998471260071));
+        pointList.add(new LatLng(18.52091709192927, 73.77995252609253));
+        pointList.add(new LatLng(18.520316874109714, 73.77870798110962));
+        pointList.add(new LatLng(18.520454212271208, 73.77709329128265));
+        pointList.add(new LatLng(18.5222294252479, 73.77664268016815));
+
+    }
     private Point firstPoint;
     private Point secondPoint;
 
@@ -108,8 +124,9 @@ public class EquationHandlerTest {
             Point point = new Point();
             point.setX(0);
             point.setY(4);
+            Point[] polygon = pointList.toArray(new Point[pointList.size() - 1]);
             Point actualPoint = equationHandler
-                    .getPointOnLineAtDistance(lineEquation, point, 10);
+                    .getPointOnLineAtDistance(lineEquation, point, 10, polygon);
             Assert.assertEquals(10.0, actualPoint.getX(), 0);
         } catch (Exception e) {
             e.printStackTrace();

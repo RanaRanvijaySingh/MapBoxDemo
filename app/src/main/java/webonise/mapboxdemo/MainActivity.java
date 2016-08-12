@@ -20,8 +20,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import webonise.mapboxdemo.AreaBuffer.AreaBuffer;
-import webonise.mapboxdemo.AreaBuffer.Point;
+import webonise.mapboxdemo.areabuffer.AreaBuffer;
+import webonise.mapboxdemo.areabuffer.Point;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-  /*  final List<LatLng> latLngPolygon = new ArrayList<>();
+   /* final List<LatLng> latLngPolygon = new ArrayList<>();
 
     {
         latLngPolygon.add(new LatLng(28.6139, 77.2090));//delhi
@@ -93,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
         latLngPolygon.add(new LatLng(18.5204, 73.8567));//pune
         latLngPolygon.add(new LatLng(12.9716, 77.5946));//banglore
         latLngPolygon.add(new LatLng(25.5941, 85.1376));//patna
-        latLngPolygon.add(new LatLng(28.6139, 77.2090));//delhi
+        latLngPolygon.add(new LatLng(28.6139, 77.2090)
+        );//delhi
     }*/
 
     @Override

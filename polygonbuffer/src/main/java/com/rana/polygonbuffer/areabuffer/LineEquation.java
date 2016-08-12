@@ -1,4 +1,4 @@
-package webonise.mapboxdemo.areabuffer;
+package com.rana.polygonbuffer.areabuffer;
 
 /**
  * Class represents equation of a line in the form of "y = mx + c"
