@@ -37,7 +37,6 @@ public class Transects {
              * STEP 3: Get reference line equation based on given angle and reference point.
              */
             LineEquation referenceLine = equationHandler.getLineEquation(angle, referencePoint);
-            //In a Loop ____
             double distanceBetweenTransects = 0.0001;
             int transectCount = 0;
             boolean isPolygonEndReached = false;
