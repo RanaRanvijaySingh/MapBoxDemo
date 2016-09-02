@@ -1,4 +1,4 @@
-package webonise.mapboxdemo.areabuffer.sromku;
+package webonise.mapboxdemo.areabuffer;
 
 /**
  * Line is defined by starting point and ending point on 2D dimension.<br>
@@ -20,13 +20,13 @@ package webonise.mapboxdemo.areabuffer.sromku;
  * @Original-Git-repo-link : https://github.com/sromku/polygon-contains-point
  */
 public class Line {
-    private final Point _start;
-    private final Point _end;
+    private final webonise.mapboxdemo.areabuffer.Point _start;
+    private final webonise.mapboxdemo.areabuffer.Point _end;
     private double _a = Double.NaN;
     private double _b = Double.NaN;
     private boolean _vertical = false;
 
-    public Line(Point start, Point end) {
+    public Line(webonise.mapboxdemo.areabuffer.Point start, webonise.mapboxdemo.areabuffer.Point end) {
         _start = start;
         _end = end;
 
@@ -44,7 +44,7 @@ public class Line {
      * @param point - The point to check
      * @return <code>True</code> if the point lays on the line, otherwise return <code>False</code>
      */
-    public boolean isInside(Point point) {
+    public boolean isInside(webonise.mapboxdemo.areabuffer.Point point) {
         double maxX = _start.x > _end.x ? _start.x : _end.x;
         double minX = _start.x < _end.x ? _start.x : _end.x;
         double maxY = _start.y > _end.y ? _start.y : _end.y;
@@ -90,7 +90,7 @@ public class Line {
      *
      * @return The start point
      */
-    public Point getStart() {
+    public webonise.mapboxdemo.areabuffer.Point getStart() {
         return _start;
     }
 

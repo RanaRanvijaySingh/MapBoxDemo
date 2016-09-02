@@ -28,7 +28,7 @@ public class AreaBufferTest {
         points.add(points.get(0));
         AreaBuffer areaBuffer = new AreaBuffer();
         try {
-            List bufferPointList = areaBuffer.buffer(points);
+            List bufferPointList = areaBuffer.buffer(points, 0.0001);
         } catch (Exception e) {
             e.printStackTrace();
         }

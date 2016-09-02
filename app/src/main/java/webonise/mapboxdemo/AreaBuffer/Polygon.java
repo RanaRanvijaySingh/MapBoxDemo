@@ -1,4 +1,4 @@
-package webonise.mapboxdemo.areabuffer.sromku;
+package webonise.mapboxdemo.areabuffer;
 
 import java.util.ArrayList;
 import java.util.List;

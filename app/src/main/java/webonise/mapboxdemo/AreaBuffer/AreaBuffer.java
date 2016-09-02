@@ -5,13 +5,14 @@ import java.util.List;
 
 public class AreaBuffer {
     /**
-     * Function to get the buffer points from a given set of lat lng
+     * Function to get the buffer points from a given set of x y
      *
      * @param pointList List<Points> A list of INCLOSED points
+     * @param distance  double Distance you want to be from original shape. Approx : 0.0001 is 3-5 meter distance on ground
      * @return List<Point> list of buffered points
      * @throws Exception
      */
-    public List<Point> buffer(List<Point> pointList) throws Exception {
+    public static List<Point> buffer(List<Point> pointList, double distance) throws Exception {
         EquationHandler equationHandler = new EquationHandler();
         List<LineEquation> bufferedLineEquationList = new ArrayList<>();
         /**
@@ -19,9 +20,9 @@ public class AreaBuffer {
          * If number of points in polygon are 5 ie. 0,1,2,3,4,0
          * then run loop for points (0,1),(1,2),(2,3),(3,4),(4,0)
          */
-        for (int i = 0; i < pointList.size() - 1; i++) {
+        for (int i = 0; i < pointList.size(); i++) {
             Point firstPoint = pointList.get(i);
-            Point secondPoint = pointList.get(i + 1);
+            Point secondPoint = pointList.get((i + 1) % pointList.size());
             /**
              * Step 1: Get equation of line from two points
              */
@@ -41,7 +42,7 @@ public class AreaBuffer {
              */
             Point[] polygon = pointList.toArray(new Point[pointList.size() - 1]);
             Point bufferPoint = equationHandler.getPointOnLineAtDistance(perpendicularLine,
-                    centerPoint, 0.0001, polygon);
+                    centerPoint, distance, polygon);
             /**
              * Step 5: Get equation of line parallel to original line passing though buffer point
              */
@@ -60,7 +61,6 @@ public class AreaBuffer {
                     (bufferedLineEquationList.get(i), bufferedLineEquationList.get(nextIndex));
             bufferedPoints.add(intersectionPoint);
         }
-        bufferedPoints.add(bufferedPoints.get(0));
         return bufferedPoints;
     }
 }

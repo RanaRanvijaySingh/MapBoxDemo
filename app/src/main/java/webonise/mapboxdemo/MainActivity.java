@@ -15,7 +15,6 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ import webonise.mapboxdemo.areabuffer.Point;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final double ZOOM_DEFAULT = 18.0f;
+    private static final double ZOOM_DEFAULT = 14.0f;
     private MapboxMap mapboxMap;
     private MapView mapview;
     private boolean hasInternetPermission;
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private double latIncrementConstants = 0;
     private double longIncrementConstants = 0;
     private Polyline mPolyline;
-    private GeometryFactory geometryFactory;
 
     //These coordinates are of BHAVDAN, PUNE, MAHARASHTRA, INDIA
     {
@@ -250,13 +248,12 @@ public class MainActivity extends AppCompatActivity {
         // Get buffered polygon points
         List<Point> pointList = new ArrayList<>();
         for (int i = 0; i < latLngPolygon.size(); i++) {
-            Point point = new Point();
-            point.setX(latLngPolygon.get(i).getLatitude());
-            point.setY(latLngPolygon.get(i).getLongitude());
+            Point point = new Point(latLngPolygon.get(i).getLatitude(),
+                    latLngPolygon.get(i).getLongitude());
             pointList.add(point);
         }
         try {
-            List<Point> bufferedPolygonList = new AreaBuffer().buffer(pointList);
+            List<Point> bufferedPolygonList = AreaBuffer.buffer(pointList, 0.0001);
             List<LatLng> latLngList = new ArrayList<>();
             for (int i = 0; i < bufferedPolygonList.size(); i++) {
                 LatLng latLng = new LatLng(bufferedPolygonList.get(i).getX(),
@@ -269,12 +266,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }///
 
     /**
      * Function to create a polygon on the map
      *
-     * @param points Geometry Class from vividsolutions
      * @param color
      */
     private void createPolygon(LatLng[] points, int color) {
@@ -282,5 +278,36 @@ public class MainActivity extends AppCompatActivity {
                 .add(points)
                 .width(4)
                 .color(color));
+    }
+
+    /**
+     * * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     * * ++++++++++++++++++++++++++ TRANSECTS CODE +++++++++++++++++++++++++++++++++++++++++++++++
+     * * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     */
+    public void onClickTransects(View view) {
+        LatLng[] points = latLngPolygon.toArray(new LatLng[latLngPolygon.size()]);
+        createPolygon(points, getResources().getColor(R.color.colorAccent));
+        List<Point> pointList = new ArrayList<>();
+        for (int i = 0; i < latLngPolygon.size(); i++) {
+            Point point = new Point(latLngPolygon.get(i).getLatitude(),
+                    latLngPolygon.get(i).getLongitude());
+            pointList.add(point);
+        }
+        try {
+            List<Point> bufferedPolygonList = Transects.generateTransects(pointList, 0);
+            List<LatLng> latLngList = new ArrayList<>();
+            for (int i = 0; i < bufferedPolygonList.size(); i++) {
+                LatLng latLng = new LatLng(bufferedPolygonList.get(i).getX(),
+                        bufferedPolygonList.get(i).getY());
+                latLngList.add(latLng);
+            }
+            //Draw buffer polygon
+            LatLng[] bufferedPoints = latLngList.toArray(new LatLng[latLngList.size()]);
+            createPolygon(bufferedPoints, getResources().getColor(R.color.mapbox_blue));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
