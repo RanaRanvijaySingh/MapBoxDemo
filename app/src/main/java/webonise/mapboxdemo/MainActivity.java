@@ -274,9 +274,9 @@ public class MainActivity extends AppCompatActivity {
      * @param color
      */
     private void createPolygon(LatLng[] points, int color) {
-        mapboxMap.addPolyline(new PolylineOptions()
+            mapboxMap.addPolyline(new PolylineOptions()
                 .add(points)
-                .width(4)
+                .width(2)
                 .color(color));
     }
 
@@ -295,19 +295,18 @@ public class MainActivity extends AppCompatActivity {
             pointList.add(point);
         }
         try {
-            List<Point> bufferedPolygonList = Transects.generateTransects(pointList, 0);
+            List<Point> waypoints = Transects.generateTransects(pointList, 0);
             List<LatLng> latLngList = new ArrayList<>();
-            for (int i = 0; i < bufferedPolygonList.size(); i++) {
-                LatLng latLng = new LatLng(bufferedPolygonList.get(i).getX(),
-                        bufferedPolygonList.get(i).getY());
+            for (int i = 0; i < waypoints.size(); i++) {
+                LatLng latLng = new LatLng(waypoints.get(i).getX(),
+                        waypoints.get(i).getY());
                 latLngList.add(latLng);
             }
             //Draw buffer polygon
-            LatLng[] bufferedPoints = latLngList.toArray(new LatLng[latLngList.size()]);
-            createPolygon(bufferedPoints, getResources().getColor(R.color.mapbox_blue));
+            LatLng[] waypointsArray = latLngList.toArray(new LatLng[latLngList.size()]);
+            createPolygon(waypointsArray, getResources().getColor(R.color.mapbox_blue));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

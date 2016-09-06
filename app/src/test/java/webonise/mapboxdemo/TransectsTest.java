@@ -188,4 +188,10 @@ public class TransectsTest {
         List<Point> points = Transects.getAllIntersectionPoints(lineEquation, edgeLines, polygon);
         Assert.assertEquals(2, points.size());
     }
+
+
+    @Test
+    public void testGenerateTransectsForASquare(){
+
+    }
 }

@@ -13,7 +13,7 @@ public class Transects {
     private static double MIN_LON_INIT = 180.0; // initialize min lon at max value
 
     public static List<Point> generateTransects(List<Point> polygonPoints, int angle) {
-        List<Point> transectPoints = new ArrayList<>();
+        List<Point> waypointList = new ArrayList<>();
         EquationHandler equationHandler = new EquationHandler();
         try {
 
@@ -21,7 +21,6 @@ public class Transects {
              * STEP 1: Get all line equation in a list.
              */
             List<LineEquation> edgeLines = getAllEdgeLineEquations(polygonPoints);
-
             /**
              * STEP 2: Find which corner should be selected as a reference points
              *  top left corner or bottom left corner of polygon.
@@ -40,6 +39,10 @@ public class Transects {
             double distanceBetweenTransects = 0.0001;
             int transectCount = 0;
             boolean isPolygonEndReached = false;
+            /**
+             * STEP 4: From obtained reference line keep on drawing parallel transects and
+             * point of intersections with the polygon.
+             */
             do {
                 /**
                  * Distance from reference point will be calculated based on
@@ -62,18 +65,21 @@ public class Transects {
                  */
                 List<Point> intersectionPoints = getAllIntersectionPoints(transectLine,
                         edgeLines, polygonPoints);
-                //Check selected base point
-                //If its top then
-                //  Get the next parallel line from given line at a given distance by DECREASING LATITUDE.
-                //else
-                //  Get the next parallel line from given line at a given distance by INCREASING LONGITUDE.
-                //Repeat the above process.  Until there is no point of intersection.
+                waypointList.addAll(intersectionPoints);
+                transectCount++;
+                /**
+                 * Identify if the end of polygon is reached or not.
+                 * If the waypoint are added and there is not intersection point from last transect.
+                 */
+                if (waypointList.size() > 0 && intersectionPoints.size() == 0) {
+                    isPolygonEndReached = true;
+                }
             } while (!isPolygonEndReached);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return waypointList;
     }
 
     /**
@@ -203,7 +209,7 @@ public class Transects {
          * If the reference point is at the top then LATITTUDE should be decreasing for the next
          * point.
          */
-        if (isReferencePointOnTop) {
+        if (!isReferencePointOnTop) {
             /**
              * Check which of the points have smaller latitude values.
              */
@@ -232,8 +238,8 @@ public class Transects {
      * @return List<Point>
      */
     public static List<Point> getAllIntersectionPoints(LineEquation transectLine,
-                                                        List<LineEquation> edgeLines,
-                                                        List<Point> polygonPoints) {
+                                                       List<LineEquation> edgeLines,
+                                                       List<Point> polygonPoints) {
         List<Point> intersectionPoints = null;
         if (edgeLines != null) {
             intersectionPoints = new ArrayList<>();
