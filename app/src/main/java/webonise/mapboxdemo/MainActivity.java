@@ -309,19 +309,24 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param angle int
      */
-    private void generateTransects(int angle) {
+    private void generateTransects(final int angle) {
         try {
-            List<Point> waypoints = Transects.generateTransects(polygonPoints, angle, 0.0003);
-            markPoint(waypoints.get(0));
-            List<LatLng> latLngList = new ArrayList<>();
-            for (int i = 0; i < waypoints.size(); i++) {
-                LatLng latLng = new LatLng(waypoints.get(i).getX(),
-                        waypoints.get(i).getY());
-                latLngList.add(latLng);
-            }
-            //Draw buffer polygon
-            LatLng[] waypointArray = latLngList.toArray(new LatLng[latLngList.size()]);
-            createTransects(waypointArray, getResources().getColor(R.color.mapbox_blue));
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    List<Point> waypoints = Transects.generateTransects(polygonPoints, angle, 0.0003);
+                    markPoint(waypoints.get(0));
+                    List<LatLng> latLngList = new ArrayList<>();
+                    for (int i = 0; i < waypoints.size(); i++) {
+                        LatLng latLng = new LatLng(waypoints.get(i).getX(),
+                                waypoints.get(i).getY());
+                        latLngList.add(latLng);
+                    }
+                    //Draw buffer polygon
+                    LatLng[] waypointArray = latLngList.toArray(new LatLng[latLngList.size()]);
+                    createTransects(waypointArray, getResources().getColor(R.color.mapbox_blue));
+                }
+            }).start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -334,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void markPoint(Point point) {
         if (firstWaypointMarker != null) {
+            firstWaypointMarker.remove();
             mapboxMap.removeMarker(firstWaypointMarker);
         }
         MarkerOptions marker = new MarkerOptions()
@@ -344,7 +350,8 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar.OnSeekBarChangeListener onTransectRotationListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            generateTransects(progress);
+            if (progress % 3 == 0)
+                generateTransects(progress);
         }
 
         @Override
