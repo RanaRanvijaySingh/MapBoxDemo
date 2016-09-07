@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.Polyline;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         latLngPolygon.add(new LatLng(18.522198905982776, 73.77668023109436));
 
     }*/
-
+/*
     final List<LatLng> latLngPolygon = new ArrayList<>();
 
     {
@@ -81,19 +82,18 @@ public class MainActivity extends AppCompatActivity {
         latLngPolygon.add(new LatLng(18.520454212271208, 73.77709329128265));
         latLngPolygon.add(new LatLng(18.5222294252479, 73.77664268016815));
 
-    }
+    }*/
 
-   /* final List<LatLng> latLngPolygon = new ArrayList<>();
+    final List<LatLng> latLngPolygon = new ArrayList<>();
 
     {
         latLngPolygon.add(new LatLng(28.6139, 77.2090));//delhi
         latLngPolygon.add(new LatLng(22.2587, 71.1924));//gujarat
-        latLngPolygon.add(new LatLng(18.5204, 73.8567));//pune
         latLngPolygon.add(new LatLng(12.9716, 77.5946));//banglore
         latLngPolygon.add(new LatLng(25.5941, 85.1376));//patna
         latLngPolygon.add(new LatLng(28.6139, 77.2090)
         );//delhi
-    }*/
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
      * @param color
      */
     private void createPolygon(LatLng[] points, int color) {
-            mapboxMap.addPolyline(new PolylineOptions()
+        mapboxMap.addPolyline(new PolylineOptions()
                 .add(points)
                 .width(2)
                 .color(color));
@@ -295,7 +295,8 @@ public class MainActivity extends AppCompatActivity {
             pointList.add(point);
         }
         try {
-            List<Point> waypoints = Transects.generateTransects(pointList, 0);
+            List<Point> waypoints = Transects.generateTransects(pointList, 30, 1.0);
+            markPoint(waypoints.get(0));
             List<LatLng> latLngList = new ArrayList<>();
             for (int i = 0; i < waypoints.size(); i++) {
                 LatLng latLng = new LatLng(waypoints.get(i).getX(),
@@ -303,10 +304,21 @@ public class MainActivity extends AppCompatActivity {
                 latLngList.add(latLng);
             }
             //Draw buffer polygon
-            LatLng[] waypointsArray = latLngList.toArray(new LatLng[latLngList.size()]);
-            createPolygon(waypointsArray, getResources().getColor(R.color.mapbox_blue));
+            LatLng[] waypointArray = latLngList.toArray(new LatLng[latLngList.size()]);
+            createPolygon(waypointArray, getResources().getColor(R.color.mapbox_blue));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Function to create a point on the marker.
+     *
+     * @param point Point
+     */
+    private void markPoint(Point point) {
+        MarkerOptions marker = new MarkerOptions()
+                .position(new LatLng(point.getX(), point.getY()));
+        mapboxMap.addMarker(marker);
     }
 }

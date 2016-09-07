@@ -12,7 +12,17 @@ public class Transects {
     private static double MAX_LAT_INIT = -90.0; // initialize max x at min value
     private static double MIN_LON_INIT = 180.0; // initialize min lon at max value
 
-    public static List<Point> generateTransects(List<Point> polygonPoints, int angle) {
+    /**
+     * Function to generate transects for given polygon at a given angle with given distance
+     * between the transects.
+     *
+     * @param polygonPoints            List<Point>
+     * @param angle                    int
+     * @param distanceBetweenTransects double
+     * @return List<Point>
+     */
+    public static List<Point> generateTransects(List<Point> polygonPoints, int angle,
+                                                double distanceBetweenTransects) {
         List<Point> waypointList = new ArrayList<>();
         EquationHandler equationHandler = new EquationHandler();
         try {
@@ -36,7 +46,6 @@ public class Transects {
              * STEP 3: Get reference line equation based on given angle and reference point.
              */
             LineEquation referenceLine = equationHandler.getLineEquation(angle, referencePoint);
-            double distanceBetweenTransects = 0.0001;
             int transectCount = 0;
             boolean isPolygonEndReached = false;
             /**
@@ -209,12 +218,15 @@ public class Transects {
          * If the reference point is at the top then LATITTUDE should be decreasing for the next
          * point.
          */
-        if (!isReferencePointOnTop) {
+        if (isReferencePointOnTop) {
             /**
              * Check which of the points have smaller latitude values.
              */
-            return pointsOnSameLine[0].getX() < pointsOnSameLine[1].getX()
+
+            return pointsOnSameLine[0].getY() > pointsOnSameLine[1].getY()
                     ? pointsOnSameLine[0] : pointsOnSameLine[1];
+//            return pointsOnSameLine[0].getX() < pointsOnSameLine[1].getX()
+//                    ? pointsOnSameLine[0] : pointsOnSameLine[1];
         }
         /**
          * If the reference point is at the bottom then LONGITUDE should be increasing for the next
