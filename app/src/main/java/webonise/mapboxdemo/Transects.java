@@ -8,6 +8,7 @@ import webonise.mapboxdemo.areabuffer.LineEquation;
 import webonise.mapboxdemo.areabuffer.Point;
 
 public class Transects {
+    private static final int MAX_TRANCEST_LIMIT = 120;
     private static double MIN_LAT_INIT = 90.0; // initialize min x at max value
     private static double MAX_LAT_INIT = -90.0; // initialize max x at min value
     private static double MIN_LON_INIT = 180.0; // initialize min lon at max value
@@ -80,7 +81,7 @@ public class Transects {
                  * Identify if the end of polygon is reached or not.
                  * If the waypoint are added and there is not intersection point from last transect.
                  */
-                if (waypointList.size() > 0 && intersectionPoints.size() == 0) {
+                if ((waypointList.size() > 0 && intersectionPoints.size() == 0) || transectCount > MAX_TRANCEST_LIMIT) {
                     isPolygonEndReached = true;
                 }
             } while (!isPolygonEndReached);
@@ -215,28 +216,25 @@ public class Transects {
     public static Point getTransectPoint(Point[] pointsOnSameLine, boolean
             isReferencePointOnTop) throws ArrayIndexOutOfBoundsException {
         /**
-         * If the reference point is at the top then LATITTUDE should be decreasing for the next
+         * If the reference point is at the top then LONGITUDE should be increasing for the next
          * point.
          */
         if (isReferencePointOnTop) {
             /**
-             * Check which of the points have smaller latitude values.
+             * Check which of the points have greater latitude values.
              */
-
             return pointsOnSameLine[0].getY() > pointsOnSameLine[1].getY()
                     ? pointsOnSameLine[0] : pointsOnSameLine[1];
-//            return pointsOnSameLine[0].getX() < pointsOnSameLine[1].getX()
-//                    ? pointsOnSameLine[0] : pointsOnSameLine[1];
         }
         /**
-         * If the reference point is at the bottom then LONGITUDE should be increasing for the next
+         * If the reference point is at the bottom then LATITUDE should be increasing for the next
          * point.
          */
         else {
             /**
-             * Check which of the points have greater longitude values.
+             * Check which of the points have greater latitude values.
              */
-            return pointsOnSameLine[0].getY() > pointsOnSameLine[1].getY()
+            return pointsOnSameLine[0].getX() > pointsOnSameLine[1].getX()
                     ? pointsOnSameLine[0] : pointsOnSameLine[1];
         }
     }

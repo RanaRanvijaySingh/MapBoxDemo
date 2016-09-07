@@ -69,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
         latLngPolygon.add(new LatLng(18.522198905982776, 73.77668023109436));
 
     }*/
-/*
-    final List<LatLng> latLngPolygon = new ArrayList<>();
+   /* final List<LatLng> latLngPolygon = new ArrayList<>();
 
     {
         latLngPolygon.add(new LatLng(18.5222294252479, 73.77664268016815));
@@ -295,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
             pointList.add(point);
         }
         try {
-            List<Point> waypoints = Transects.generateTransects(pointList, 30, 1.0);
+            List<Point> waypoints = Transects.generateTransects(pointList, 180, 1.0);
             markPoint(waypoints.get(0));
             List<LatLng> latLngList = new ArrayList<>();
             for (int i = 0; i < waypoints.size(); i++) {
