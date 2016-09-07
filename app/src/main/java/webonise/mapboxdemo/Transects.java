@@ -17,10 +17,13 @@ public class Transects {
      * Function to generate transects for given polygon at a given angle with given distance
      * between the transects.
      *
-     * @param polygonPoints            List<Point>
-     * @param angle                    int
-     * @param distanceBetweenTransects double
-     * @return List<Point>
+     * @param polygonPoints            List<Point> list of polygon points
+     * @param angle                    int angle at which the transect should be inclined.
+     *                                 Angle 0 means lines will be vertical. Go on increasing the
+     *                                 angle for inclined lines from longitude.
+     * @param distanceBetweenTransects double distance between the transects.
+     * @return List<Point> waypoint list. Creating polyline on map for all the waypoint will give
+     * you complete transect for the given polygon.
      */
     public static List<Point> generateTransects(List<Point> polygonPoints, int angle,
                                                 double distanceBetweenTransects) {
@@ -89,7 +92,7 @@ public class Transects {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return waypointList;
+        return arrangeWaypoints(waypointList);
     }
 
     /**
@@ -267,5 +270,27 @@ public class Transects {
             }
         }
         return intersectionPoints;
+    }
+
+    /**
+     * Function to arrange all the waypoints in a format so as drone could fry on it with
+     * covering minu=imum di
+     *
+     * @param points
+     * @return
+     */
+    public static List<Point> arrangeWaypoints(List<Point> points) {
+        if (points != null && points.size() > 3) {
+            int i = 2;
+            do {
+                int firstPosition = i;
+                int secondPosition = i + 1;
+                Point temp = points.get(firstPosition);
+                points.set(firstPosition, points.get(secondPosition));
+                points.set(secondPosition, temp);
+                i += 4;
+            } while (i + 1 <= points.size() - 1);
+        }
+        return points;
     }
 }

@@ -30,16 +30,23 @@
         android:text="Add new point"/>
 
     <Button
-        android:layout_toRightOf="@id/bAddNewPoint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/bAddNewPoint"
         android:onClick="onClickBufferExample"
         android:text="Buffer example"/>
 
     <Button
-        android:layout_below="@id/bShowPolyline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/bShowPolyline"
         android:onClick="onClickTransects"
         android:text="Transects"/>
+
+    <SeekBar
+        android:layout_alignParentBottom="true"
+        android:id="@+id/sbRotation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="360"/>
 </RelativeLayout>

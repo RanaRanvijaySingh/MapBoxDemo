@@ -5,9 +5,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.annotations.Polygon;
 import com.mapbox.mapboxsdk.annotations.Polyline;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -38,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private double latIncrementConstants = 0;
     private double longIncrementConstants = 0;
     private Polyline mPolyline;
+    private List<Point> polygonPoints;
+    private Polyline transectPolyline;
+    private Marker firstWaypointMarker;
 
     //These coordinates are of BHAVDAN, PUNE, MAHARASHTRA, INDIA
     {
@@ -69,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         latLngPolygon.add(new LatLng(18.522198905982776, 73.77668023109436));
 
     }*/
-   /* final List<LatLng> latLngPolygon = new ArrayList<>();
+    final List<LatLng> latLngPolygon = new ArrayList<>();
 
     {
         latLngPolygon.add(new LatLng(18.5222294252479, 73.77664268016815));
@@ -80,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
         latLngPolygon.add(new LatLng(18.520316874109714, 73.77870798110962));
         latLngPolygon.add(new LatLng(18.520454212271208, 73.77709329128265));
         latLngPolygon.add(new LatLng(18.5222294252479, 73.77664268016815));
+    }
 
-    }*/
 
-    final List<LatLng> latLngPolygon = new ArrayList<>();
+    /*final List<LatLng> latLngPolygon = new ArrayList<>();
 
     {
         latLngPolygon.add(new LatLng(28.6139, 77.2090));//delhi
@@ -92,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         latLngPolygon.add(new LatLng(25.5941, 85.1376));//patna
         latLngPolygon.add(new LatLng(28.6139, 77.2090)
         );//delhi
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         requestForPermissions();
         initializeMapView(savedInstanceState);
+        SeekBar sbRotation = (SeekBar) findViewById(R.id.sbRotation);
+        sbRotation.setOnSeekBarChangeListener(onTransectRotationListener);
         mapview.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
@@ -287,14 +295,23 @@ public class MainActivity extends AppCompatActivity {
     public void onClickTransects(View view) {
         LatLng[] points = latLngPolygon.toArray(new LatLng[latLngPolygon.size()]);
         createPolygon(points, getResources().getColor(R.color.colorAccent));
-        List<Point> pointList = new ArrayList<>();
+        polygonPoints = new ArrayList<>();
         for (int i = 0; i < latLngPolygon.size(); i++) {
             Point point = new Point(latLngPolygon.get(i).getLatitude(),
                     latLngPolygon.get(i).getLongitude());
-            pointList.add(point);
+            polygonPoints.add(point);
         }
+        generateTransects(0);
+    }
+
+    /**
+     * Function to generate transects based on given angle.
+     *
+     * @param angle int
+     */
+    private void generateTransects(int angle) {
         try {
-            List<Point> waypoints = Transects.generateTransects(pointList, 180, 1.0);
+            List<Point> waypoints = Transects.generateTransects(polygonPoints, angle, 0.0003);
             markPoint(waypoints.get(0));
             List<LatLng> latLngList = new ArrayList<>();
             for (int i = 0; i < waypoints.size(); i++) {
@@ -304,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
             }
             //Draw buffer polygon
             LatLng[] waypointArray = latLngList.toArray(new LatLng[latLngList.size()]);
-            createPolygon(waypointArray, getResources().getColor(R.color.mapbox_blue));
+            createTransects(waypointArray, getResources().getColor(R.color.mapbox_blue));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -316,8 +333,44 @@ public class MainActivity extends AppCompatActivity {
      * @param point Point
      */
     private void markPoint(Point point) {
+        if (firstWaypointMarker != null) {
+            mapboxMap.removeMarker(firstWaypointMarker);
+        }
         MarkerOptions marker = new MarkerOptions()
                 .position(new LatLng(point.getX(), point.getY()));
-        mapboxMap.addMarker(marker);
+        firstWaypointMarker = mapboxMap.addMarker(marker);
+    }
+
+    private SeekBar.OnSeekBarChangeListener onTransectRotationListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            generateTransects(progress);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
+
+
+    /**
+     * Function to create a polygon on the map
+     *
+     * @param color
+     */
+    private void createTransects(LatLng[] points, int color) {
+        if (transectPolyline != null) {
+            mapboxMap.removePolyline(transectPolyline);
+        }
+        transectPolyline = mapboxMap.addPolyline(new PolylineOptions()
+                .add(points)
+                .width(2)
+                .color(color));
     }
 }

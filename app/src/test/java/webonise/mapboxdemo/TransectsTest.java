@@ -188,4 +188,83 @@ public class TransectsTest {
         List<Point> points = Transects.getAllIntersectionPoints(lineEquation, edgeLines, polygon);
         Assert.assertEquals(2, points.size());
     }
+
+    @Test
+    public void testArrangeWaypointsForValidData() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(0, 1));
+        points.add(new Point(1, 1));
+        points.add(new Point(2, 1));
+        points.add(new Point(3, 1));
+        points.add(new Point(4, 1));
+        points.add(new Point(5, 1));
+        points.add(new Point(6, 1));
+        points.add(new Point(7, 1));
+        points.add(new Point(8, 1));
+        points.add(new Point(9, 1));
+        points.add(new Point(10, 1));
+        points.add(new Point(11, 1));
+        List<Point> actualPointList = Transects.arrangeWaypoints(points);
+        Assert.assertEquals(0, actualPointList.get(0).getX(), 0);
+        Assert.assertEquals(1, actualPointList.get(1).getX(), 0);
+        Assert.assertEquals(3, actualPointList.get(2).getX(), 0);
+        Assert.assertEquals(2, actualPointList.get(3).getX(), 0);
+        Assert.assertEquals(4, actualPointList.get(4).getX(), 0);
+        Assert.assertEquals(5, actualPointList.get(5).getX(), 0);
+        Assert.assertEquals(7, actualPointList.get(6).getX(), 0);
+    }
+
+    @Test
+    public void testArrangeWaypointsForValidData2() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(0, 1));
+        points.add(new Point(1, 1));
+        points.add(new Point(2, 1));
+        points.add(new Point(3, 1));
+        points.add(new Point(4, 1));
+        points.add(new Point(5, 1));
+        points.add(new Point(6, 1));
+        points.add(new Point(7, 1));
+        points.add(new Point(8, 1));
+        points.add(new Point(9, 1));
+        points.add(new Point(10, 1));
+        List<Point> actualPointList = Transects.arrangeWaypoints(points);
+        Assert.assertEquals(0, actualPointList.get(0).getX(), 0);
+        Assert.assertEquals(1, actualPointList.get(1).getX(), 0);
+        Assert.assertEquals(3, actualPointList.get(2).getX(), 0);
+        Assert.assertEquals(2, actualPointList.get(3).getX(), 0);
+        Assert.assertEquals(4, actualPointList.get(4).getX(), 0);
+        Assert.assertEquals(5, actualPointList.get(5).getX(), 0);
+        Assert.assertEquals(7, actualPointList.get(6).getX(), 0);
+        Assert.assertEquals(6, actualPointList.get(7).getX(), 0);
+        Assert.assertEquals(8, actualPointList.get(8).getX(), 0);
+        Assert.assertEquals(9, actualPointList.get(9).getX(), 0);
+        Assert.assertEquals(10, actualPointList.get(10).getX(), 0);
+    }
+
+    @Test
+    public void testArrangeWaypointsForValidData3() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(0, 1));
+        points.add(new Point(1, 1));
+        points.add(new Point(2, 1));
+        points.add(new Point(3, 1));
+        List<Point> actualPointList = Transects.arrangeWaypoints(points);
+        Assert.assertEquals(0, actualPointList.get(0).getX(), 0);
+        Assert.assertEquals(1, actualPointList.get(1).getX(), 0);
+        Assert.assertEquals(3, actualPointList.get(2).getX(), 0);
+        Assert.assertEquals(2, actualPointList.get(3).getX(), 0);
+    }
+
+    @Test
+    public void testArrangeWaypointsForValidData4() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(0, 1));
+        points.add(new Point(1, 1));
+        points.add(new Point(2, 1));
+        List<Point> actualPointList = Transects.arrangeWaypoints(points);
+        Assert.assertEquals(0, actualPointList.get(0).getX(), 0);
+        Assert.assertEquals(1, actualPointList.get(1).getX(), 0);
+        Assert.assertEquals(2, actualPointList.get(2).getX(), 0);
+    }
 }
