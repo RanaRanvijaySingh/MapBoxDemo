@@ -267,4 +267,50 @@ public class TransectsTest {
         Assert.assertEquals(1, actualPointList.get(1).getX(), 0);
         Assert.assertEquals(2, actualPointList.get(2).getX(), 0);
     }
+
+
+    @Test
+    public void testArrangeInterceptPointForValidData() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(0, 1));
+        points.add(new Point(1, 1));
+        List<Point> actualPointList = Transects.arrangeInterceptPoint(points);
+        Assert.assertEquals(0, actualPointList.get(0).getX(), 0);
+        Assert.assertEquals(1, actualPointList.get(1).getX(), 0);
+    }
+
+
+    @Test
+    public void testArrangeInterceptPointForValidData2() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(0, 1));
+        List<Point> actualPointList = Transects.arrangeInterceptPoint(points);
+        Assert.assertEquals(0, actualPointList.get(0).getY(), 0);
+        Assert.assertEquals(1, actualPointList.get(1).getY(), 0);
+    }
+
+
+    @Test
+    public void testArrangeInterceptPointForValidData3() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(0, 1));
+        List<Point> actualPointList = Transects.arrangeInterceptPoint(points);
+        Assert.assertEquals(0, actualPointList.get(0).getY(), 0);
+        Assert.assertEquals(1, actualPointList.get(1).getY(), 0);
+    }
+
+
+    @Test
+    public void testArrangeInterceptPointForValidData4() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(11, 12));
+        points.add(new Point(14, 56));
+        List<Point> actualPointList = Transects.arrangeInterceptPoint(points);
+        Assert.assertEquals(11, actualPointList.get(0).getX(), 0);
+        Assert.assertEquals(14, actualPointList.get(1).getX(), 0);
+    }
+
+
 }

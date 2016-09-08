@@ -269,15 +269,23 @@ public class Transects {
                 }
             }
         }
-        return intersectionPoints;
+        /**
+         * Finally arrange the points in one conventional way.
+         * The convention is:
+         * If X of point is different then point with lesser X will be first index and other on
+         * second index.
+         * else if X is same then check for Y to be different and point with lesser Y will be
+         * first index and other on second index.
+         */
+        return arrangeInterceptPoint(intersectionPoints);
     }
 
     /**
-     * Function to arrange all the waypoints in a format so as drone could fry on it with
-     * covering minu=imum di
+     * Function to arrange all the waypoints in a format so as drone could fly on it with
+     * covering minimum distance
      *
-     * @param points
-     * @return
+     * @param points List<Point>
+     * @return List<Point>
      */
     public static List<Point> arrangeWaypoints(List<Point> points) {
         if (points != null && points.size() > 3) {
@@ -290,6 +298,49 @@ public class Transects {
                 points.set(secondPosition, temp);
                 i += 4;
             } while (i + 1 <= points.size() - 1);
+        }
+        return points;
+    }
+
+    /**
+     * Function to arrange the intercept point in one conventional way so as to make the final
+     * list of way points have similar pattern.
+     *
+     * @param points List<Point>
+     * @return List<Point>
+     */
+    public static List<Point> arrangeInterceptPoint(List<Point> points) {
+        if (points != null && points.size() >= 2) {
+            /**
+             * Check if x coordinate is same or not.
+             */
+            if (points.get(0).getX() != points.get(1).getX()) {
+                /**
+                 * If x coordinate is not same then check which of the points have higher X value and
+                 * save the one having lesser in first index and other in second index.
+                 */
+                if (points.get(0).getX() > points.get(1).getX()) {
+                    //Swap the values
+                    Point temp = points.get(0);
+                    points.set(0, points.get(1));
+                    points.set(1, temp);
+                }
+            }
+            /**
+             * Check if Y coordinate is same or not.
+             */
+            else if (points.get(0).getY() != points.get(1).getY()) {
+                /**
+                 * If Y coordinate is not same then check which of the points have higher Y value
+                 * and save the one having lesser in first index and other in second index.
+                 */
+                if (points.get(0).getY() > points.get(1).getY()) {
+                    //Swap the values
+                    Point temp = points.get(0);
+                    points.set(0, points.get(1));
+                    points.set(1, temp);
+                }
+            }
         }
         return points;
     }
