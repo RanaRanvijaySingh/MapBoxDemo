@@ -312,5 +312,51 @@ public class TransectsTest {
         Assert.assertEquals(14, actualPointList.get(1).getX(), 0);
     }
 
+    @Test
+    public void testFilterInterceptPointsForValidData() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(1, 1));
+        points.add(new Point(2, 2));
+        List<Point> actualPoints = Transects.filterInterceptPoints(points);
+        Assert.assertEquals(0, actualPoints.get(0).getX(), 0);
+        Assert.assertEquals(2, actualPoints.get(1).getX(), 0);
+    }
 
+    @Test
+    public void testFilterInterceptPointsForValidData1() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(1, 1));
+        points.add(new Point(2, 2));
+        points.add(new Point(3, 3));
+        List<Point> actualPoints = Transects.filterInterceptPoints(points);
+        Assert.assertEquals(0, actualPoints.get(0).getX(), 0);
+        Assert.assertEquals(3, actualPoints.get(1).getX(), 0);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

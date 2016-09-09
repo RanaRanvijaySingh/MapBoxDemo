@@ -270,6 +270,10 @@ public class Transects {
             }
         }
         /**
+         * Here is two step process.
+         * First we have to make sure the intercept point is always less than equal to 2.
+         * Which is done by filterInterceptPoints function.
+         *
          * Finally arrange the points in one conventional way.
          * The convention is:
          * If X of point is different then point with lesser X will be first index and other on
@@ -277,29 +281,66 @@ public class Transects {
          * else if X is same then check for Y to be different and point with lesser Y will be
          * first index and other on second index.
          */
-        return arrangeInterceptPoint(intersectionPoints);
+        return arrangeInterceptPoint(filterInterceptPoints(intersectionPoints));
     }
 
     /**
-     * Function to arrange all the waypoints in a format so as drone could fly on it with
-     * covering minimum distance
+     * Function to filter intercept point so as to get just two point of intercept.
      *
-     * @param points List<Point>
-     * @return List<Point>
+     * @param intersectionPoints List<Point> Original list of intercept points.
+     * @return List<Point> Final intercept points.
      */
-    public static List<Point> arrangeWaypoints(List<Point> points) {
-        if (points != null && points.size() > 3) {
-            int i = 2;
-            do {
-                int firstPosition = i;
-                int secondPosition = i + 1;
-                Point temp = points.get(firstPosition);
-                points.set(firstPosition, points.get(secondPosition));
-                points.set(secondPosition, temp);
-                i += 4;
-            } while (i + 1 <= points.size() - 1);
+    public static List<Point> filterInterceptPoints(List<Point> intersectionPoints) {
+        /**
+         * Check if the intercept point is less than 3 then return the same.
+         */
+        if (intersectionPoints != null && intersectionPoints.size() < 3) {
+            return intersectionPoints;
+        } else {
+            /**
+             * Find return the points with (X min,Y min) and (X max, Y max)
+             */
+            Point minPoint = intersectionPoints.get(0);
+            Point maxPoint = intersectionPoints.get(intersectionPoints.size() - 1);
+            /**
+             * Select comparison param based on which of the coordinate is not same ie. X or Y.
+             */
+            boolean isComparisonParamX =
+                    intersectionPoints.get(0).getX() != intersectionPoints.get(1).getX();
+            for (int i = 0; i < intersectionPoints.size(); i++) {
+                if (isComparisonParamX) {
+                    /**
+                     * Find out the minimum point of intersection.
+                     */
+                    if (intersectionPoints.get(i).getX() < minPoint.getX()) {
+                        minPoint = intersectionPoints.get(i);
+                    }
+                    /**
+                     * Find max point of intersection.
+                     */
+                    if (intersectionPoints.get(i).getX() > maxPoint.getX()) {
+                        maxPoint = intersectionPoints.get(i);
+                    }
+                } else {
+                    /**
+                     * Find out the minimum point of intersection.
+                     */
+                    if (intersectionPoints.get(i).getY() < minPoint.getY()) {
+                        minPoint = intersectionPoints.get(i);
+                    }
+                    /**
+                     * Find max point of intersection.
+                     */
+                    if (intersectionPoints.get(i).getY() > maxPoint.getY()) {
+                        maxPoint = intersectionPoints.get(i);
+                    }
+                }
+            }
+            List<Point> pointList = new ArrayList<>();
+            pointList.add(minPoint);
+            pointList.add(maxPoint);
+            return pointList;
         }
-        return points;
     }
 
     /**
@@ -341,6 +382,28 @@ public class Transects {
                     points.set(1, temp);
                 }
             }
+        }
+        return points;
+    }
+
+    /**
+     * Function to arrange all the waypoints in a format so as drone could fly on it with
+     * covering minimum distance
+     *
+     * @param points List<Point>
+     * @return List<Point>
+     */
+    public static List<Point> arrangeWaypoints(List<Point> points) {
+        if (points != null && points.size() > 3) {
+            int i = 2;
+            do {
+                int firstPosition = i;
+                int secondPosition = i + 1;
+                Point temp = points.get(firstPosition);
+                points.set(firstPosition, points.get(secondPosition));
+                points.set(secondPosition, temp);
+                i += 4;
+            } while (i + 1 <= points.size() - 1);
         }
         return points;
     }
