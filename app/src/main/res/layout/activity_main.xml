@@ -35,4 +35,11 @@
         android:layout_height="wrap_content"
         android:onClick="onClickBufferExample"
         android:text="Buffer example"/>
+
+    <Button
+        android:layout_below="@id/bShowPolyline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClickTransects"
+        android:text="Transects"/>
 </RelativeLayout>
